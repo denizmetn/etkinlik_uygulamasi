@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Etkinlikler Listesi{% endblock %}
+
+{% block content %}
+<h1>Etkinlikler</h1>
+
+<div class="activity-grid">
+    {% for activity in activities %}
+    <div class="activity-card">
+        <a href="{% url 'event:activity_detail' activity.slug %}">
+            {% if activity.img_url %}
+            <img src="{{ activity.img_url }}" alt="{{ activity.name }}" class="activity-image">
+            {% else %}
+            <img src="{% static 'img/default.jpg' %}" alt="Görsel Yok" class="activity-image">
+            {% endif %}
+            <div class="activity-info">
+                <h3>{{ activity.name }}</h3>
+                <p>{{ activity.location.name }}</p>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <p>Hiç etkinlik bulunamadı.</p>
+    {% endfor %}
+</div>
+{% endblock %}

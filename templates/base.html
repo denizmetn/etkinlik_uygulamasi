@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <meta charset="UTF-8">
+    <title>{% block title %}Etkinlik Uygulaması{% endblock %}</title>
+</head>
+
+<body>
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+       
+        <div class="nav-left">
+            <h1 style="margin: 0;"><a href="{% url 'event:home' %}"
+                    style="text-decoration: none; color: inherit;">ETKİNLİKLER </a></h1>
+        </div>
+    
+        
+        <div class="nav-right" style="display: flex; align-items: center; gap: 10px;">
+            <a href="{% url 'event:home' %}">Anasayfa</a>
+            {% if user.is_authenticated %}
+            <span class="greeting">Merhaba, {{ user.username }}</span>
+            <a href="{% url 'account:logout' %}" class="btn">Çıkış Yap</a>
+            {% else %}
+            <a href="{% url 'account:login' %}" class="btn">Giriş Yap</a>
+            <a href="{% url 'account:register' %}" class="btn">Kayıt Ol</a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    
+    
+
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+</html>

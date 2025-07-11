@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Ekranı</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="outer-wrapper">
+        <div class="form-box">
+            <h2>Giriş Ekranı</h2>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Kullanıcı adı" required>
+                <input type="password" name="password" placeholder="Parola" required>
+
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Beni hatırla</label>
+                </div>
+
+                <button type="submit">Giriş</button>
+            </form>
+
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

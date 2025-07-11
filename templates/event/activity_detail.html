@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ activity.name }}</title>
+</head>
+
+<body>
+    <h1>{{ activity.name }}</h1>
+    <p>Kategori: {{ activity.category.name }}</p>
+    <p>Konum: {{ activity.location.name }}</p>
+    <p>İlçe: {{ activity.township.name }}</p>
+    <p>Detaylar: {{ activity.content|safe }}</p>
+    <p><a href="{{ activity.url }}" target="_blank">Etkinlik Sayfası</a></p>
+
+    {% if activity.img_url %}
+    <img src="{{ activity.img_url }}" alt="{{ activity.name }}" style="max-width:300px;">
+    {% endif %}
+</body>
+
+</html>

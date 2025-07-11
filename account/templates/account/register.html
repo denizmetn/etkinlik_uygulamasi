@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="outer-wrapper">
+        <div class="form-box">
+            <h2>Kayıt Ol</h2>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Kullanıcı adı" required value="{{username|default:''}}">
+                <input type="email" name="email" placeholder="Email" required  value="{{ email|default:'' }}">
+                <input type="text" name="firstname" placeholder="Adınız" required value="{{ firstname|default:'' }}">
+                <input type="text" name="lastname" placeholder="Soyadınız" required value="{{ lastname|default:'' }}">
+                <input type="password" name="password" placeholder="Şifre" required>
+                <input type="password" name="repassword" placeholder="Şifre Tekrar" required>
+
+                <button type="submit">Kayıt Ol</button>
+            </form>
+
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
