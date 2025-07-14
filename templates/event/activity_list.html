@@ -6,10 +6,6 @@
 {% block content %}
 
 
-<div>
-    
-</div>
-
 <form method="get" class="filter-form">
 
       <div class="form-group"  >
@@ -62,7 +58,7 @@
 </form>
 
 <div class="activity-grid">
-    {% for activity in activities %}
+    {% for activity in page_obj %}
     <div class="activity-card">
         <a href="{% url 'event:activity_detail' activity.slug %}">
             {% if activity.img_url %}
@@ -80,4 +76,55 @@
     <p>Hiç etkinlik bulunamadı.</p>
     {% endfor %}
 </div>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+    <a
+        href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+        {% if request.GET.category %}&category={{ request.GET.category }}{% endif %}
+        {% if request.GET.city %}&city={{ request.GET.city }}{% endif %}
+        {% if request.GET.date %}&date={{ request.GET.date }}{% endif %}
+        {% if request.GET.is_free %}&is_free={{ request.GET.is_free }}{% endif %}">
+            Önceki
+    </a>
+    {% endif %}
+
+    <span class="current">
+        Sayfa {{ page_obj.number}} / {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+    <a
+        href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+        {% if request.GET.category %}&category={{ request.GET.category }}{% endif %}
+        {% if request.GET.city %}&city={{ request.GET.city }}{% endif %}
+        {% if request.GET.date %}&date={{ request.GET.date }}{% endif %}
+        {% if request.GET.is_free %}&is_free={{ request.GET.is_free }}{% endif %}">
+        Sonraki
+    </a>
+    {% endif %}
+    </span>
+</div>
+
+<div class="pagination-numbers">
+    {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+            <span class="current-page"> {{ i }} </span>
+        {% else %}
+    <a
+        href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+        {% if request.GET.category %}&category={{ request.GET.category }}{% endif %}
+        {% if request.GET.city %}&city={{ request.GET.city }}{% endif %}
+        {% if request.GET.date %}&date={{ request.GET.date }}{% endif %}
+        {% if request.GET.is_free %}&is_free={{ request.GET.is_free }}{% endif %}">
+        {{ i }}
+    </a>
+        {% endif %}
+    {% endfor %}    
+</div>
+
+
+
 {% endblock %}
