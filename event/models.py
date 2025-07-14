@@ -1,6 +1,7 @@
 from django.db import models
 import requests
 from constance import config
+from dateutil.parser import parse
 
 class Location(models.Model):
     name = models.CharField(max_length=200)
@@ -45,12 +46,15 @@ class Activity(models.Model):
     img_url = models.CharField(max_length=600, blank=True ,null=True)
     is_free = models.BooleanField(default=False)
     ticket_url = models.CharField(max_length=600, blank=True ,null=True)
+    start_date = models.DateTimeField(blank=True , null=True)
+    end_date = models.DateTimeField(blank=True , null=True)
     
     def __str__(self):
         return self.name
     
     @staticmethod
-    def etkinlikleri_getir(take=100, skip=0):
+    def etkinlikleri_getir(take=200, skip=0):
+
 
         base_url = "https://backend.etkinlik.io/api/v2/events"
 
@@ -128,14 +132,41 @@ class Activity(models.Model):
                 etkinlik.img_url = row.get("poster_url")
                 etkinlik.ticket_url = row.get("ticket_url")
                 etkinlik.is_free = row.get("is_free") in ["True", True, "true"]
+
+                start = row.get("start")
+                end = row.get("end")
+                etkinlik.start_date = parse(start) if start else None
+                etkinlik.end_date = parse(end) if end else None
+
                 etkinlik.save()
 
 
+
                 
+     
 
             print()
         else:
             print("hata var", response.content)
+
+
+
+            response = requests.get(
+                url=base_url,
+                params=params,
+                headers=headers
+            )
+
+        if response.status_code in [200, 201]:
+            data = response.json()
+            print(data)  # Burada tüm API cevabını konsola yazdırır
+
+
+
+
+
+           
+
 
 
             

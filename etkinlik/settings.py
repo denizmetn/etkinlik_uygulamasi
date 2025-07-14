@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'etkinlik.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'etkinlik',         # Veritabanı adı
-        'USER': 'db_user',           # PostgreSQL kullanıcı adı
-        'PASSWORD': 'db_password',   # Şifre
-        'HOST': 'localhost',         # Eğer PostgreSQL yerel bilgisayarınızda ise
-        'PORT': '5432',              # PostgreSQL'in varsayılan portu
+        'NAME': 'etkinlik',         
+        'USER': 'db_user',           
+        'PASSWORD': 'db_password',  
+        'HOST': 'localhost',         
+        'PORT': '5432',              
     }
 }
 

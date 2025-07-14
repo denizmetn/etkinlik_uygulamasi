@@ -1,22 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ activity.name }}</title>
-</head>
+{% block title %}Etkinlik Detayları - {{ activity.name }}{% endblock %}
 
-<body>
-    <h1>{{ activity.name }}</h1>
-    <p>Kategori: {{ activity.category.name }}</p>
-    <p>Konum: {{ activity.location.name }}</p>
-    <p>İlçe: {{ activity.township.name }}</p>
-    <p>Detaylar: {{ activity.content|safe }}</p>
-    <p><a href="{{ activity.url }}" target="_blank">Etkinlik Sayfası</a></p>
+{% block content %}
+<div class="detail-container">
+
+    <h2 class="detail-header">Etkinlik Detayları</h2>
+    <h1 class="detail-title">{{ activity.name }}</h1>
 
     {% if activity.img_url %}
-    <img src="{{ activity.img_url }}" alt="{{ activity.name }}" style="max-width:300px;">
+    <div class="image-wrapper">
+        <img src="{{ activity.img_url }}" alt="{{ activity.name }}">
+    </div>
     {% endif %}
-</body>
 
-</html>
+    <div class="info-cards">
+
+        <div class="info-card">
+            <strong>Konum</strong>
+            <p>{{ activity.location.name }}</p>
+        </div>
+
+        {% if activity.city.name %}
+        <div class="info-card">
+            <strong>Şehir / İlçe</strong>
+            <p>{{ activity.city.name }}{% if activity.township.name %} / {{ activity.township.name }}{% endif %}</p>
+        </div>
+        {% endif %}
+
+        <div class="info-card">
+            <strong>Ücret</strong>
+            <p>{% if activity.is_paid %}Ücretli{% else %}Ücretsiz{% endif %}</p>
+        </div>
+
+    {% if activity.start_date %}
+    <div class="info-card">
+        <strong>Tarih</strong>
+        <p>
+            {% if activity.start_date.date == activity.end_date.date %}
+            {{ activity.start_date|date:"j F Y" }}<br>
+            {{ activity.start_date|time:"H:i" }} - {{ activity.end_date|time:"H:i" }}
+            {% else %}
+            Başlangıç: {{ activity.start_date|date:"j F Y H:i" }}<br>
+            Bitiş: {{ activity.end_date|date:"j F Y H:i" }}
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+
+    </div>
+
+    <section class="detail-content">
+        {{ activity.content|safe }}
+    </section>
+
+    <div class="action-buttons">
+        <a href="{{ activity.url }}" target="_blank" class="btn btn-secondary">Etkinlik Sayfası</a>
+        {% if activity.ticket_url %}
+        <a href="{{ activity.ticket_url }}" target="_blank" class="btn btn-primary">Bilet Al</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

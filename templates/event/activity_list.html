@@ -4,7 +4,62 @@
 {% block title %}Etkinlikler Listesi{% endblock %}
 
 {% block content %}
-<h1>Etkinlikler</h1>
+
+
+<div>
+    
+</div>
+
+<form method="get" class="filter-form">
+
+      <div class="form-group"  >
+        <label for="search">Ara (İsim veya Konum)</label>
+        <input type="text" name="search" id="search" value="{{ request.GET.search|default:'' }}"
+            placeholder="Etkinlik ara">
+            
+    </div>
+
+    <div class="form-group">
+        <label for="category">Kategori</label>
+        <select name="category" id="category">
+            <option value="">Hepsi</option>
+            {% for cat in categories %}
+            <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="city">Şehir</label>
+        <select name="city" id="city">
+            <option value="">Hepsi</option>
+            {% for c in cities %}
+            <option value="{{ c.slug }}" {% if selected_city == c.slug %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Tarih</label>
+        <input type="date" name="date" id="date" value="{{ selected_date }}">
+    </div>
+
+    <div class="form-group">
+        <label for="is_free">Ücret</label>
+        <select name="is_free" id="is_free">
+            <option value="">Hepsi</option>
+            <option value="free" {% if selected_is_free == "free" %}selected{% endif %}>Ücretsiz</option>
+            <option value="paid" {% if selected_is_free == "paid" %}selected{% endif %}>Ücretli</option>
+        </select>
+
+    </div>
+    <div class="button-group">
+        <button type="submit">Filtrele</button>
+        <a href="{% url 'event:home' %}" class="reset-button">Sıfırla</a>
+    </div>
+
+</form>
 
 <div class="activity-grid">
     {% for activity in activities %}
