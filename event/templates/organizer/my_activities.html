@@ -1,0 +1,89 @@
+{# event/templates/organizer/my_activities.html #}
+
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}Benim Etkinliklerim{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Benim Etkinliklerim</h2>
+        <a href="{% url 'event:create_activity' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yeni Etkinlik Oluştur
+        </a>
+    </div>
+
+    
+    {% if messages %}
+    <ul class="messages list-unstyled">
+        {% for message in messages %}
+        <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if activities %}
+    <div class="row">
+        {% for activity in activities %}
+        <div class="col-md-6 col-lg-4 mb-8">
+            <div class="card h-100">
+                {% if activity.img_url %}
+                <img src="{{ activity.img_url }}" class="card-img-top" alt="{{ activity.name }}"
+                    style="width: 100%; height: 200px; object-fit: cover; display: block; margin-left:auto; margin-right:auto;">
+
+                {% else %}
+                <img src="{% static 'images/default_event.jpg' %}" class="card-img-top" alt="Default Image"
+                    style="height: 200px; object-fit: cover;"> 
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ activity.name }}</h5>
+                    <p class="card-text text-muted small">
+                        {{ activity.start_date|date:"d M Y H:i" }} - {{ activity.location.name }}
+                    </p>
+                    <p class="card-text">
+                        {{ activity.description|truncatechars:100 }}
+                    </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="{% url 'event:activity_detail' slug=activity.slug %}"
+                        class="btn btn-sm btn-info">Detaylar</a>
+                    
+                    <div class="btn-group" role="group" aria-label="Etkinlik İşlemleri">
+                        <a href="{% url 'event:edit_activity' slug=activity.slug %}"
+                            class="btn btn-sm btn-warning">Düzenle</a>
+                        <a href="{% url 'event:delete_activity' slug=activity.slug %}"
+                            class="btn btn-sm btn-danger">Sil</a>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a></li>
+            {% endif %}
+            {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    
+    {% endif %}
+</div>
+{% endblock %}

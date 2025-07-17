@@ -15,23 +15,84 @@
             <hr>
             <form method="post">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Kullanıcı adı" required value="{{username|default:''}}">
-                <input type="email" name="email" placeholder="Email" required  value="{{ email|default:'' }}">
-                <input type="text" name="firstname" placeholder="Adınız" required value="{{ firstname|default:'' }}">
-                <input type="text" name="lastname" placeholder="Soyadınız" required value="{{ lastname|default:'' }}">
-                <input type="password" name="password" placeholder="Şifre" required>
-                <input type="password" name="repassword" placeholder="Şifre Tekrar" required>
 
-                <button type="submit">Kayıt Ol</button>
+                
+                {% if form.non_field_errors %}
+                <ul class="errorlist">
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="sr-only">Kullanıcı Adı</label> 
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <ul class="errorlist">{% for error in form.username.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}" class="sr-only">Email Adresi</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <ul class="errorlist">{% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}" class="sr-only">Adınız</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                    <ul class="errorlist">{% for error in form.first_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+         
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}" class="sr-only">Soyadınız</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <ul class="errorlist">{% for error in form.last_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}" class="sr-only">Şifre</label>
+                    {{ form.password1 }} 
+                    {% if form.password1.errors %}
+                    <ul class="errorlist">{% for error in form.password1.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}" class="sr-only">Şifre Tekrar</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <ul class="errorlist">{% for error in form.password2.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="submit-button">Kayıt Ol</button>
             </form>
 
+        
             {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                <li>{{ message }}</li>
+                <li class="{{ message.tags }}">{{ message }}</li>
                 {% endfor %}
             </ul>
             {% endif %}
+
+            
+            <p class="login-link">Zaten hesabın var mı? <a href="{% url 'account:login' %}">Giriş Yap</a></p>
         </div>
     </div>
 </body>

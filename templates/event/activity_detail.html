@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+
 {% block title %}Etkinlik Detayları - {{ activity.name }}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 <div class="detail-container">
 
     <h2 class="detail-header">Etkinlik Detayları</h2>
@@ -22,10 +25,10 @@
             <p>{{ activity.location.name }}</p>
         </div>
 
-        {% if activity.city.name %}
+        {% if activity.township.city.name %}
         <div class="info-card">
             <strong>Şehir / İlçe</strong>
-            <p>{{ activity.city.name }}{% if activity.township.name %} / {{ activity.township.name }}{% endif %}</p>
+            <p>{{ activity.city.name }}{% if activity.township.name %} {{ activity.township.city.name}} / {{ activity.township.name }}{% endif %}</p>
         </div>
         {% endif %}
 
@@ -61,6 +64,15 @@
         {% if activity.ticket_url %}
         <a href="{{ activity.ticket_url }}" target="_blank" class="btn btn-primary">Bilet Al</a>
         {% endif %}
+        {% comment %}
+        {% if user.is_authenticated and user.role == 'organizer' and user == activity.organizer %}
+        <a href="{% url 'event:activity_update' activity.slug %}" class="btn btn-warning mt-2">Etkinliği Düzenle</a>
+        <a href="{% url 'event:activity_delete' activity.slug %}" class="btn btn-danger mt-2">Etkinliği Sil</a>
+        {% endif %}
+        {% endcomment %}
+        <a href="{% url 'event:home' %}" class="btn btn-info mt-2">Geri Dön</a> {# Geri dön butonu #}
+
+
     </div>
 
 </div>

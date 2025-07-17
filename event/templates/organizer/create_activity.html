@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{% if activity %} Etkinliği Düzenle {% else %} Yeni Etkinlik Oluştur {% endif %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/create_etkinlik.css' %}">
+
+<div class="form-wrapper">
+    <h2>
+        {% if activity %} Etkinliği Düzenle {% else %} Yeni Etkinlik Oluştur {% endif %}
+    </h2>
+
+    {% if messages %}
+    <ul class="message-list">
+        {% for message in messages %}
+        <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <small class="help-text">{{ field.help_text }}</small>
+            {% endif %}
+            {% if field.errors %}
+            <div class="error-text">
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit">
+                {% if activity %} Kaydet {% else %} Oluştur {% endif %}
+            </button>
+            <a href="{% url 'event:my_activities' %}" class="cancel-link">İptal</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

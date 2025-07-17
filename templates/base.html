@@ -3,45 +3,60 @@
 
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
     <meta charset="UTF-8">
-    <title>{% block title %}Etkinlik Uygulaması{% endblock %}</title>
+    <title>{% block title %}Etkinlikler{% endblock %}</title>
+
+    
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+
 </head>
 
 <body>
-    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-       
-    <div class="nav-left">
-        <h1 style="margin: 0;">
-            <a href="{% url 'event:home' %}" style="text-decoration: none; color: inherit;">ETKİNLİKLER</a>
-        </h1>
-        
-       
-    </div>
+    <nav class="main-navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a class="navbar-brand" href="{% url 'event:home' %}">Etkinlikler</a>
+            </div>
 
-    
-        
-        <div class="nav-right" style="display: flex; align-items: center; gap: 10px;">
-            <a href="{% url 'event:home' %}">Anasayfa</a>
-            {% if user.is_authenticated %}
-            <span class="greeting">Merhaba, {{ user.username }}</span>
-            <a href="{% url 'account:logout' %}" class="btn">Çıkış Yap</a>
-            {% else %}
-            <a href="{% url 'account:login' %}" class="btn">Giriş Yap</a>
-            <a href="{% url 'account:register' %}" class="btn">Kayıt Ol</a>
-            {% endif %}
+            <div class="navbar-right">
+                <ul class="nav-links">
+                    <li><a href="{% url 'event:home' %}">Tüm Etkinlikler</a></li>
+
+                    {% if user.is_authenticated and user.role in 'organizer,admin' %}
+                    <li><a href="{% url 'event:create_activity' %}">Yeni Etkinlik Oluştur</a></li>
+                    <li><a href="{% url 'event:my_activities' %}">Benim Etkinliklerim</a></li>
+                    {% endif %}
+                </ul>
+
+                <ul class="auth-links">
+                    {% if user.is_authenticated %}
+                    <li><span class="user-greeting">Merhaba, {{ user.username }} ({{ user.get_role_display }})</span>
+                    </li>
+                    <li><a href="{% url 'account:logout' %}" class="btn-link">Çıkış Yap</a></li>
+                    {% else %}
+                    <li><a href="{% url 'account:register' %}" class="btn-link">Kayıt Ol</a></li>
+                    <li><a href="{% url 'account:login' %}" class="btn-link">Giriş Yap</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </nav>
-    
-    
-    
 
-    <hr>
+
+    <div class="message-container">
+        {% if messages %}
+        <ul class="messages-list">
+            {% for message in messages %}
+            <li class="alert-{{ message.tags }}">
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 
     {% block content %}
     {% endblock %}
-
 </body>
 
 </html>

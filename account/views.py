@@ -1,90 +1,65 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate, login ,logout
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-
-
-
-
-def login_request(request):
-    if request.user.is_authenticated:
-       return redirect("event:home") 
-    
-
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-
-        user = authenticate(request, username=username, password=password)
-
-        if user:
-            login(request,user)
-            return redirect("event:home") 
-        else:
-            messages.error(request, "Kullanıcı adı veya parola hatalı.")
-            return render(request,"account/login.html",{
-            })
-        
-    return render(request,"account/login.html")    
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .models import CustomUser
+from django.contrib.auth.models import Group 
+from django.views.decorators.csrf import csrf_exempt
 
 
 def register_request(request):
-    if request.user.is_authenticated:
-        return redirect("event:home") 
-    
     if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-        firstname = request.POST["firstname"]
-        lastname = request.POST["lastname"]
-        password = request.POST["password"]
-        repassword = request.POST["repassword"]
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False) 
+            user.role = 'attendee'        
+            user.is_active = True        
+            user.save()                  
 
-        if password == repassword:
-            if User.objects.filter(username = username).exists():
-                messages.error(request, "Kullanıcı adı kullanılıyor.")
-                return render(request,"account/register.html",{
-                     "username":username,
-                     "email":email,
-                     "firstname":firstname,
-                     "lastname":lastname,
-                })
-            else:
-                if User.objects.filter(email = email).exists():
-                    messages.error(request, "Email kullanılıyor.")
-                    return render(request,"account/register.html",{
-                     "username":username,
-                     "email":email,
-                     "firstname":firstname,
-                     "lastname":lastname,
-                    })
-                else:
-                    user = User.objects.create_user(
-                        username=username,
-                        email=email,
-                        first_name=firstname,
-                        last_name=lastname,
-                        password=password
-                    )
-                    user.save()
-                    return redirect("account:login")
-                
+            attendee_group, created = Group.objects.get_or_create(name='Attendees')
+            user.groups.add(attendee_group) 
 
+            login(request, user)
+            messages.success(request, "Kayıt başarılı. Hoş geldiniz!")
+            return redirect("event:home") 
 
         else:
-            messages.error(request, "Parola Eşleşmiyor.")
-            return render(request,"account/register.html",{
+            for field, errors in form.errors.items():
+                for error in errors:
+                    display_field_name = form.fields[field].label if field in form.fields else field
+                    messages.error(request, f"{display_field_name}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, f"Genel Hata: {error}")
 
-                "username" : username,
-                "email": email,
-                "firstname": firstname,
-                "lastname": lastname
-            })
+            return render(request, "account/register.html", {"form": form})
+            
+    form = CustomUserCreationForm()
+    return render(request, "account/register.html", {"form": form})
 
-
-    return render (request,"account/register.html")    
+@csrf_exempt
+def login_request(request):
+    if request.method == "POST":
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password) 
+            if user is not None:
+                login(request, user)
+                return redirect("event:home")  
+            else:
+                messages.error(request, "Geçersiz kullanıcı adı veya parola.")
+        else:
+            messages.error(request, "Lütfen formu doğru doldurun.") 
+    
+   
+    form = CustomAuthenticationForm()
+    return render(request, "account/login.html", {"form": form})
 
 
 def logout_request(request):
     logout(request)
-    return redirect("event:home") 
+    return redirect("event:home")
+
+def home(request):
+    return render(request, "event/activity_list.html", {})

@@ -19,10 +19,11 @@ from django.urls import path, include
 from event.views import *
 from django.shortcuts import redirect 
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("events/", include("event.urls")),
+    path('events/', include('event.urls')),  
     path("", lambda request: redirect("/events/")),
-    path("account/", include("account.urls"))
-
+    path("account/", include("account.urls")),
 ]
