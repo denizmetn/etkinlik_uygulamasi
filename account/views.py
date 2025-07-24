@@ -21,6 +21,7 @@ def register_request(request):
 
             login(request, user)
             messages.success(request, "Kayıt başarılı. Hoş geldiniz!")
+            CustomUser.register_mail(user=user)
             return redirect("event:home") 
 
         else:
@@ -36,7 +37,6 @@ def register_request(request):
     form = CustomUserCreationForm()
     return render(request, "account/register.html", {"form": form})
 
-@csrf_exempt
 def login_request(request):
     if request.method == "POST":
         form = CustomAuthenticationForm(request, data=request.POST)
@@ -46,6 +46,7 @@ def login_request(request):
             user = authenticate(request, username=username, password=password) 
             if user is not None:
                 login(request, user)
+                CustomUser.login_mail(user=user)
                 return redirect("event:home")  
             else:
                 messages.error(request, "Geçersiz kullanıcı adı veya parola.")
@@ -60,6 +61,10 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     return redirect("event:home")
+
+
+def profile(request):
+    return render(request, 'account/profile.html', {'user': request.user})
 
 def home(request):
     return render(request, "event/activity_list.html", {})

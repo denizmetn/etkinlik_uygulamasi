@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 def role_required(allowed_roles=None):
     if allowed_roles is None:
         allowed_roles = []
+        
     def decorator(view_func):
         def wrap(request, *args, **kwargs):
             if not request.user.is_authenticated:
@@ -15,7 +16,6 @@ def role_required(allowed_roles=None):
                 return view_func(request, *args, **kwargs)
             else:
                 messages.error(request, "Bu sayfaya erişim yetkiniz yok.")
-                # return HttpResponseForbidden("Bu sayfaya erişim yetkiniz yok.")
-                return redirect(reverse_lazy('event:activity_list')) # Yetkisizse etkinlik listesine yönlendir
+                return redirect(reverse_lazy('event:activity_list'))
         return wrap
     return decorator

@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-^q3w2d-ws#6+wg2vd!3^vb%x49193vi0-d_yu7*@-i-k%--&o=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 
 # Application definition
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'event',
     'account',
+    'orders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,13 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'constance.backends.database',
-    'constance',
-
+    'constance'
 ]
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
     'API_KEY': ('', 'Entegrasyon API key'),
-    
+    'LOGIN_MAIL_TEMPLATE': ('', 'giris mail tasarimi'),
+    'REGISTER_MAIL_TEMPLATE': ('', 'register mail tasarimi'),
+    'FROM_EMAIL': ('', 'gönderici email adresi'),  
+    'FAVORITE_MAIL_TEMPLATE' : ('', 'favori yaklaşınca email'),  
 }
 
 MIDDLEWARE = [
@@ -139,3 +143,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'account.CustomUser'
 LOGOUT_REDIRECT_URL = '/admin/login/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'dniizmetiiin@gmail.com'
+EMAIL_HOST_PASSWORD = 'vffs kqch ljty ggov'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+IYZICO_API_KEY = "sandbox-juLp4c7f3CspMoX7AolcROCMuGFgrgTv"
+IYZICO_SECRET_KEY = "sandbox-wqxNrnppQ2X7GYjIpT3TuVW6eFsFQIgi"
+IYZICO_BASE_URL = "sandbox-api.iyzipay.com"
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://sandbox-merchant.iyzipay.com",
+    "https://sandbox-api.iyzipay.com",
+    "https://127.0.0.1:8000",  # Geliştirme ortamı için
+    "http://127.0.0.1:8000",
+    "http://localhost:8000"
+]

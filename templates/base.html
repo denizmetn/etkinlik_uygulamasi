@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <title>{% block title %}Etkinlikler{% endblock %}</title>
 
-    
     <link rel="stylesheet" href="{% static 'css/nav.css' %}">
 
 </head>
@@ -30,9 +29,16 @@
 
                 <ul class="auth-links">
                     {% if user.is_authenticated %}
-                    <li><span class="user-greeting">Merhaba, {{ user.username }} ({{ user.get_role_display }})</span>
+                    <li class="dropdown">
+                        <button class="dropbtn">Merhaba, {{ user.username }} ({{ user.get_role_display }}) ▼</button>
+                        <div class="dropdown-content">
+                            <a href="{% url 'account:profile' %}">Profil</a>
+                            <a href="{% url 'event:favorites' %}">Favorilerim</a>
+                            <a href="{% url 'account:logout' %}">Çıkış Yap</a>
+                            <a href="">Ayarlar</a>
+                        </div>
                     </li>
-                    <li><a href="{% url 'account:logout' %}" class="btn-link">Çıkış Yap</a></li>
+
                     {% else %}
                     <li><a href="{% url 'account:register' %}" class="btn-link">Kayıt Ol</a></li>
                     <li><a href="{% url 'account:login' %}" class="btn-link">Giriş Yap</a></li>

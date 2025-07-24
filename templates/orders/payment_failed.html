@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Ödeme Başarısız</title>
+</head>
+<body>
+    <h1>Ödeme Başarısız oldu</h1>
+    <p>{{ error_message }}</p>
+    <a href="{% url 'orders:create_order' activity_slug=order.activity.slug %}">Tekrar dene</a>
+</body>
+</html>

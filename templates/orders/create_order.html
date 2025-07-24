@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ activity.name }} - Bilet Al</title>
+  <link rel="stylesheet" href="{% static 'css/odeme.css' %}" />
+</head>
+<body>
+
+<div class="container">
+  <h2>{{ activity.name }} için Bilet Al</h2>
+
+  <form method="post" id="order-form">
+    {% csrf_token %}
+
+    <label for="id_quantity_standart">Tam Bilet (₺{{ ticket_prices.standart }}):</label>
+    {{ form.quantity_standart }}
+
+    <label for="id_quantity_student">Öğrenci Bileti (₺{{ ticket_prices.student }}):</label>
+    {{ form.quantity_student }}
+
+    <label for="id_quantity_vip">VIP Bilet (₺{{ ticket_prices.vip }}):</label>
+    {{ form.quantity_vip }}
+
+    <p>Toplam Tutar: ₺<span id="total-price">0.00</span></p>
+
+    <button type="submit">Devam Et</button>
+  </form>
+</div>
+
+<script>
+  const prices = {
+    standart: {{ ticket_prices.standart }},
+    student: {{ ticket_prices.student }},
+    vip: {{ ticket_prices.vip }},
+  };
+
+  function updateTotal() {
+    const standart = parseInt(document.getElementById("id_quantity_standart").value) || 0;
+    const student = parseInt(document.getElementById("id_quantity_student").value) || 0;
+    const vip = parseInt(document.getElementById("id_quantity_vip").value) || 0;
+
+    const total = (standart * prices.standart) + (student * prices.student) + (vip * prices.vip);
+    document.getElementById("total-price").innerText = total.toFixed(2);
+  }
+
+  document.getElementById("id_quantity_standart").addEventListener("input", updateTotal);
+  document.getElementById("id_quantity_student").addEventListener("input", updateTotal);
+  document.getElementById("id_quantity_vip").addEventListener("input", updateTotal);
+
+  updateTotal();
+</script>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ from constance import config
 from dateutil.parser import parse
 from django.template.defaultfilters import slugify 
 from account.models import CustomUser 
+from django.conf import settings
 
 class Location(models.Model):
     name = models.CharField(max_length=200, verbose_name="Yer Adı")
@@ -78,7 +79,6 @@ class Activity(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE,verbose_name="Yer")
     category = models.ForeignKey(Category,on_delete=models.CASCADE, verbose_name="Kategori")
     township = models.ForeignKey(Township, on_delete=models.CASCADE, verbose_name="İlçe")
-
     organizer = models.ForeignKey('account.CustomUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='organized_activities', verbose_name="Organizatör")
     name = models.CharField(max_length=200, verbose_name="Etkinlik Adı")
     slug = models.CharField(unique=True, blank=True, verbose_name="URL Dostu İsim")
@@ -93,10 +93,10 @@ class Activity(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Oluşturulma Tarihi") 
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Güncelleme Tarihi") 
     is_published = models.BooleanField(default=True, verbose_name="Yayınlandı mı?")
+    ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         verbose_name = "Etkinlik"
-        verbose_name_plural = "Etkinlikler"
         ordering = ['start_date']
 
     
@@ -112,6 +112,18 @@ class Activity(models.Model):
                 self.slug = f"{original_slug}-{count}"
                 count += 1
         super().save(*args, **kwargs)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    activity = models.ForeignKey('Activity', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'activity')
+
+    def __str__(self):
+        return f"{self.user.username} favorited {self.activity.name}"
 
 
     
@@ -202,7 +214,6 @@ class Activity(models.Model):
                 
                 etkinlik.save()
 
-          
         else:
             print("hata var", response.content)
 

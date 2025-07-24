@@ -57,9 +57,9 @@
 
 </form>
 
-<div class="activity-grid">
+<div class="activity-grid" >
     {% for activity in page_obj %}
-    <div class="activity-card">
+    <div class="activity-card" style="position: relative;">
         <a href="{% url 'event:activity_detail' activity.slug %}">
             {% if activity.img_url %}
             <img src="{{ activity.img_url }}" alt="{{ activity.name }}" class="activity-image">
@@ -72,15 +72,25 @@
             </div>
         </a>
         
-        
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'event:add_favorite' activity.id %}"
+            style="position: absolute; bottom: 8px; right: 8px;">
+            {% csrf_token %}
+            <button type="submit" style="background: transparent; border: none; font-size: 24px; cursor: pointer;"
+                aria-label="Favoriye ekle/çıkar">
+                {% if activity.is_favorite %}
+                ❤️
+                {% else %}
+                🤍
+                {% endif %}
+            </button>
+        </form>
+        {% endif %}
 
 
     </div>
     {% empty %}
     <p>Hiç etkinlik bulunamadı.</p>
-    {% if user.is_authenticated and user.role == 'organizer' %}
-    <a href="{% url 'event:create_activity' %}" class="btn btn-success mt-3">İlk Etkinliğinizi Oluşturun</a>
-    {% endif %}
     {% endfor %}
 </div>
 

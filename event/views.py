@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404 
-from .models import Activity, Category, City, Location, Township 
+from .models import Activity, Category, City, Location, Township , Favorite
 from django.utils.timezone import make_aware
 from datetime import datetime, time
 from django.db.models import Q
@@ -10,10 +10,19 @@ from django.urls import reverse_lazy
 from .forms import ActivityForm
 from account.decorators import role_required
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Exists, OuterRef, Value, BooleanField
+
 
 
 def activity_list(request):
-    activities = Activity.objects.all()
+    activities = Activity.objects.filter(is_published=True)
+
+    if request.user.is_authenticated:
+        user_favorites = Favorite.objects.filter(user=request.user, activity=OuterRef('pk'))
+        activities = activities.annotate(is_favorite=Exists(user_favorites))
+    else:
+        activities = activities.annotate(is_favorite=Value(False, output_field=BooleanField()))
+
 
     category_slug = request.GET.get("category")
     city_slug = request.GET.get("city")
@@ -169,7 +178,26 @@ def delete_activity(request, slug):
 
     return render(request,'organizer/delete_activity.html',{'activity':activity})
 
-    
+@login_required
+def add_favorite(request, activity_id):
+    activity = get_object_or_404(Activity , id = activity_id)
+    favorite , created= Favorite.objects.get_or_create( user= request.user, activity = activity)
+
+    if not created:
+        favorite.delete()
+
+    return redirect(request.META.get('HTTP_REFERER', 'event:home'))
+
+@login_required
+def favorites_list(request):
+    favorites = Favorite.objects.filter(user=request.user).select_related('activity')
+    activities = [fav.activity for fav in favorites]
+    return render(request, 'event/favorites_list.html', {'activities': activities})
+
+
+
+
+
 
 
     

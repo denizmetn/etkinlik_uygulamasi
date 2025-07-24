@@ -61,16 +61,9 @@
 
     <div class="action-buttons">
         <a href="{{ activity.url }}" target="_blank" class="btn btn-secondary">Etkinlik Sayfası</a>
-        {% if activity.ticket_url %}
-        <a href="{{ activity.ticket_url }}" target="_blank" class="btn btn-primary">Bilet Al</a>
-        {% endif %}
-        {% comment %}
-        {% if user.is_authenticated and user.role == 'organizer' and user == activity.organizer %}
-        <a href="{% url 'event:activity_update' activity.slug %}" class="btn btn-warning mt-2">Etkinliği Düzenle</a>
-        <a href="{% url 'event:activity_delete' activity.slug %}" class="btn btn-danger mt-2">Etkinliği Sil</a>
-        {% endif %}
-        {% endcomment %}
-        <a href="{% url 'event:home' %}" class="btn btn-info mt-2">Geri Dön</a> {# Geri dön butonu #}
+        <a href="{% url 'orders:create_order' activity_slug=activity.slug %}" class="btn btn-success">Bilet Al</a>
+
+        <a href="{% url 'event:home' %}" class="btn btn-info mt-2">Geri Dön</a> 
 
 
     </div>

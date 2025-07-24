@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Profilim{% endblock %}
+
+{% block content %}
+<div class="container"> 
+    <h1>Merhaba {{ user.username }}</h1>
+    {% if user.email %}
+    <p>Email: <strong>{{ user.email }}</strong></p>
+    {% endif %}
+
+    {% if user.first_name and user.last_name %}
+    <p>Adı Soyadı: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+    {% endif %}
+
+    {% if user.role %} 
+    <p>Rolünüz: <strong>{{ user.role|capfirst }}</strong></p> 
+    {% endif %}
+
+    <p>Üyelik Tarihi: <strong>{{ user.date_joined|date:"d M Y" }}</strong></p>
+    
+
+    
+
+    {% if user.role == 'organizer' %}
+    <hr>
+    <h3>Düzenleyici Bilgileri</h3>
+    <p>Oluşturduğunuz etkinlik sayısı: {{ user.organized_activities.count }}</p>
+    {% endif %}
+
+
+</div>
+{% endblock %}
