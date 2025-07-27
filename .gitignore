@@ -1,11 +1,36 @@
+# Python derleme dosyaları
 __pycache__/
 *.py[cod]
+
+# Django veritabanı
 *.sqlite3
+db.sqlite3
+
+# Ortam dosyaları
 .env
 *.env
+
+# Log dosyaları
 *.log
-/static/
+
+# Static & media klasörleri (genellikle render'da yeniden üretilir)
+static/
 media/
-db.sqlite3
+staticfiles/
+
+# IDE & Editor klasörleri
 .vscode/
+.idea/
+
+# Python paket build klasörleri
 *.egg-info/
+dist/
+build/
+
+# Sanal ortamlar
+venv/
+env/
+blog_env/
+
+# Git deposunun içinde kalmasın
+.git/
