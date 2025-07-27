@@ -89,13 +89,14 @@ WSGI_APPLICATION = 'etkinlik.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'etkinlik',         
-        'USER': 'db_user',           
-        'PASSWORD': 'db_password',  
-        'HOST': 'localhost',         
-        'PORT': '5432',              
+        'HOST': 'dpg-d2313ch5pdvs739f98o0-a',  # Senin hostname
+        'PORT': '5432',                         # Port
+        'NAME': 'etkinlikdb',                   # Database adı
+        'USER': 'etkinlikdb_user',              # Kullanıcı adı
+        'PASSWORD': 'txejhvGuiEq8OTERIXLmOuHN4Gebtt4p',  # Parola
     }
 }
+
 
 
 
